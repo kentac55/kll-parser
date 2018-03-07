@@ -55,26 +55,26 @@ class KllParserSpec extends UnitSpec {
     }
   }
 
-  "scanCode()" should "parse scanCode Element to ScanCode object" in {
-    val testTriggers = Table(
+  "scanCode()" should "parse given string to ScanCode object" in {
+    val goodScanCode = Table(
       ("i", "o"),
       ("S0x2A", ScanCode(0x2A)),
       ("S42", ScanCode(42))
     )
-    forAll(testTriggers) { (i: String, o: ScanCode) =>
+    forAll(goodScanCode) { (i: String, o: ScanCode) =>
       assert(parseAll(scanCode, i).get == Right(o))
     }
   }
 
-  it should "produce RuntimeException when given word is incorrect format" in {
-    val badFormulas = Table(
+  it should "produce RuntimeException when given string is incorrect format" in {
+    val badScanCode = Table(
       "i",
       "U0x2A",
       "Sasdf",
       "S-0x2A",
       "S-10"
     )
-    forAll(badFormulas) { (i: String) =>
+    forAll(badScanCode) { (i: String) =>
       assertThrows[RuntimeException](parseAll(scanCode, i).get)
     }
   }
