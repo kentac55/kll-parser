@@ -1354,17 +1354,17 @@ object KeyTable {
     ))
   lazy val capability2Func = ???
 
-  private lazy val usbStatusKeys: Seq[Int]             = (0x00 to 0x03) :+ 0x66
-  private lazy val usbReservedKeys: Seq[Int]           = (0xA5 to 0xDF) ++ (0xE8 to 0xFFFF)
-  private lazy val usbInternalUseKeys: Range.Inclusive = 0xF0 to 0xFF
+  private lazy val usbStatusKeys      = (0x00 to 0x03) :+ 0x66
+  private lazy val usbReservedKeys    = (0xA5 to 0xDF) ++ (0xE8 to 0xFFFF)
+  private lazy val usbInternalUseKeys = 0xF0 to 0xFF
 
-  private lazy val sysReservedKeys: Seq[Int] = (0x94 to 0x9F) ++ (0xA9 to 0xAF) ++ (0xB8 to 0xFFFF)
+  private lazy val sysReservedKeys = (0x94 to 0x9F) ++ (0xA9 to 0xAF) ++ (0xB8 to 0xFFFF)
 
-  private lazy val consReservedKeys: Seq[Int] =
+  private lazy val consReservedKeys =
     (0x023 to 0x03F) ++ (0x037 to 0x03F) ++ (0x049 to 0x05F) ++ (0x067 to 0x06E) ++ (0x076 to 0x07F)
       .:+(0x09F) ++ (0x0A5 to 0x0AF) ++ (0x0CF to 0x0DF) ++ (0x0EB to 0x0EF) ++ (0x10E to 0x14F) ++ (0x156 to 0x15F)
       .:+(0x1BB) ++ (0x29E to 0xFFFF)
-  private lazy val consUnknownKeys: Seq[Int] = 0x0F6 to 0x0FF
+  private lazy val consUnknownKeys = 0x0F6 to 0x0FF
 
   val usbUnusableKeys: Seq[Int]  = usbStatusKeys ++ usbReservedKeys ++ usbInternalUseKeys
   val sysUnusableKeys: Seq[Int]  = sysReservedKeys
