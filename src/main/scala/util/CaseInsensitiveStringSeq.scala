@@ -1,3 +1,5 @@
+package util
+
 import java.util.Locale
 
 class CaseInsensitiveStringSeq private (val originalList: Seq[String])

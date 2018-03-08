@@ -1,3 +1,5 @@
+import util.CaseInsensitiveMap
+
 class CaseInsensitiveMapSpec extends UnitSpec {
   val lowerCaseMap        = Map(("key1", 1), ("key2", 2))
   val upperCaseMap        = Map(("KEY1", 1), ("KEY2", 2))
@@ -37,7 +39,7 @@ class CaseInsensitiveMapSpec extends UnitSpec {
     assert(upperInsensitiveMap - "key1" == expectedResult)
   }
 
-  "factory method" should "build CaseInsensitiveMap object" in {
+  "factory method" should "build util.CaseInsensitiveMap object" in {
     assert(lowerInsensitiveMap.isInstanceOf[CaseInsensitiveMap[Int]])
     assert(upperInsensitiveMap.isInstanceOf[CaseInsensitiveMap[Int]])
   }

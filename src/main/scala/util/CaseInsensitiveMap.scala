@@ -1,3 +1,5 @@
+package util
+
 // This software includes the work that is distributed in the Apache License 2.0
 // https://github.com/apache/spark/blob/master/sql/catalyst/src/main/scala/org/apache/spark/sql/catalyst/util/CaseInsensitiveMap.scala
 

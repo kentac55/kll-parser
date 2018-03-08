@@ -1,3 +1,5 @@
+import util.CaseInsensitiveStringSeq
+
 class CaseInsensitiveStringSeqSpec extends UnitSpec {
   val originalSeq  = List("abc", "xyz")
   val upperCaseSeq = CaseInsensitiveStringSeq("ABC", "XYZ")
@@ -22,7 +24,7 @@ class CaseInsensitiveStringSeqSpec extends UnitSpec {
     assert(upperCaseSeq.length == 2)
     assert(lowerCaseSeq.length == 2)
   }
-  "factory method" should "build CaseInsensitiveStringSeq object" in {
+  "factory method" should "build util.CaseInsensitiveStringSeq object" in {
     assert(CaseInsensitiveStringSeq("ABC", "XYZ").isInstanceOf[CaseInsensitiveStringSeq])
     assert(CaseInsensitiveStringSeq("abc", "xyz").isInstanceOf[CaseInsensitiveStringSeq])
   }
