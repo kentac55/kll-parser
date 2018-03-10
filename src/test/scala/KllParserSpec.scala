@@ -1,8 +1,4 @@
-import java.util.NoSuchElementException
-
 import KllParser._
-
-import scala.reflect.ClassTag
 
 class KllParserSpec extends UnitSpec {
   "comments()" should "parse comment literal to Comment object" in {
