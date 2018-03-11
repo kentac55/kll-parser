@@ -1,4 +1,5 @@
 import KllParser._
+import org.scalacheck._
 
 class KllParserSpec extends UnitSpec {
   "comments()" should "parse comment literal to Comment object" in {
@@ -79,6 +80,26 @@ class KllParserSpec extends UnitSpec {
     }
   }
 
+  it should "parse scan code with analog" in {
+    val analogRange = Gen.choose(0, 100)
+    forAll(analogRange) { n: Int =>
+      val input = s"S42($n)"
+      assert(parseAll(scanCode, input).get == Right(ScanCode(42, n)))
+    }
+  }
+
+  it should "produce RuntimeException when analog string is incorrect" in {
+    val badScanCodeWithAnalog = Table(
+      "i",
+      "S0x2A(-10)",
+      "S0x2A(1000)",
+      "S42(000)"
+    )
+    forAll(badScanCodeWithAnalog) { (i: String) =>
+      assertThrows[RuntimeException](parseAll(scanCode, i).get)
+    }
+  }
+
   "usbCode()" should "parse given string to UsbCode Object" in {
     val goodUsbCode = Table(
       ("i", "o"),
@@ -117,6 +138,26 @@ class KllParserSpec extends UnitSpec {
         case Left(e) => e.isInstanceOf[NoSuchElementException]
         case _       => false
       })
+    }
+  }
+
+  it should "parse usb code with analog" in {
+    val analogRange = Gen.choose(0, 100)
+    forAll(analogRange) { n: Int =>
+      val input = s"U42($n)"
+      assert(parseAll(usbCode, input).get == Right(USBCode(42, n)))
+    }
+  }
+
+  it should "produce RuntimeException when analog string is incorrect" in {
+    val badScanCodeWithAnalog = Table(
+      "i",
+      "U0x2A(-10)",
+      "U0x2A(1000)",
+      "U42(000)"
+    )
+    forAll(badScanCodeWithAnalog) { (i: String) =>
+      assertThrows[RuntimeException](parseAll(scanCode, i).get)
     }
   }
 

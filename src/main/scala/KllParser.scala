@@ -10,6 +10,7 @@ object KllParser extends RegexParsers with JavaTokenParsers {
   val variableRegex: Regex = "[A-Za-z0-9]+".r
   val hexRegex: Regex      = "0x[A-Fa-f0-9]+".r
   val decRegex: Regex      = "\\d+".r
+  val analogRegex: Regex   = "(100|[1-9]?[0-9])".r
 
   def line: Parser[Line] = formula <~ ";" | comment
 
@@ -37,10 +38,17 @@ object KllParser extends RegexParsers with JavaTokenParsers {
   }
 
   def scanCode: Parser[Either[Throwable, ScanCode]] =
-    "S" ~> (hex | dec) ^^ { _.map(ScanCode) }
+    "S" ~> (hex | dec) ~ opt(analog) ^^ {
+      case s ~ a => s.map(ScanCode(_, a.getOrElse(Analog.MAX)))
+    }
 
   def usbCode: Parser[Either[Throwable, USBCode]] =
-    "U" ~> (hex | dec | word) ^^ { _.map(USBCode) }
+    "U" ~> (hex | dec | word) ~ opt(analog) ^^ {
+      case u ~ a => u.map(USBCode(_, a.getOrElse(Analog.MAX)))
+    }
+
+  def analog: Parser[Int] =
+    "(" ~> analogRegex <~ ")" ^^ { Integer.parseInt(_) }
 
   private def hex: Parser[Either[Throwable, Int]] =
     hexRegex ^^ (x => allCatch.either(Integer.parseInt(x.drop(2), 16)))
