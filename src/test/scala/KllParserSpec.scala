@@ -119,4 +119,32 @@ class KllParserSpec extends UnitSpec {
       })
     }
   }
+
+  "trigger()" should "parse given string to scanCode or usbCode" in {
+    val goodString = Table(
+      ("i", "o"),
+      ("S0x2A", ScanCode(0x2A)),
+      ("S42", ScanCode(42)),
+      ("U0x2A", USBCode(0x2A)),
+      ("U42", USBCode(42)),
+      ("U\"A\"", USBCode(4)),
+      ("U\"a\"", USBCode(4)),
+      ("U\"Backspace\"", USBCode(42)),
+      ("U\"backspace\"", USBCode(42)),
+      ("U\"-\"", USBCode(0x2D))
+    )
+    forAll(goodString) { (i: String, o: Trigger) =>
+      assert(parseAll(trigger, i).get == o)
+    }
+  }
+
+  it should "return TriggerError when given world is incorrect" in {
+    val badString = Table(
+      ("i", "o"),
+      ("U\"nothing\"", TriggerError("key not found: nothing"))
+    )
+    forAll(badString) { (i: String, o: Trigger) =>
+      assert(parseAll(trigger, i).get == o)
+    }
+  }
 }
