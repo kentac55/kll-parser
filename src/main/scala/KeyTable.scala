@@ -3,9 +3,9 @@ import util._
 object KeyTable {
 
   type CIStrList = CaseInsensitiveStringSeq
-  val CIStrList = CaseInsensitiveStringSeq
+  private val CIStrList = CaseInsensitiveStringSeq
   type CIMap[T] = CaseInsensitiveMap[T]
-  val CIMap = CaseInsensitiveMap
+  private val CIMap = CaseInsensitiveMap
 
   lazy val usbCode2Name: Map[Int, CIStrList] = Map(
     (0x04, CIStrList("A")),
