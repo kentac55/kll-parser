@@ -102,7 +102,7 @@ class KllParserSpec extends UnitSpec {
     }
   }
 
-  it should "produce NoSuchElementException when given analog is not found in table" in {
+  it should "produce NoSuchElementException when given scanCode doesn't exist in table" in {
     val sysCodeRange = Gen.choose(sysCode2Name.head._1, sysCode2Name.last._1)
     forAll(sysCodeRange) { n: Int =>
       val input = s"S$n"
