@@ -1,5 +1,7 @@
-import KllParser._
 import org.scalacheck._
+
+import KeyTable._
+import KllParser._
 
 class KllParserSpec extends UnitSpec {
   "comments()" should "parse comment literal to Comment object" in {
@@ -97,6 +99,17 @@ class KllParserSpec extends UnitSpec {
     )
     forAll(badScanCodeWithAnalog) { (i: String) =>
       assertThrows[RuntimeException](parseAll(scanCode, i).get)
+    }
+  }
+
+  it should "produce NoSuchElementException when given analog is not found in table" in {
+    val sysCodeRange = Gen.choose(sysCode2Name.head._1, sysCode2Name.last._1)
+    forAll(sysCodeRange) { n: Int =>
+      val input = s"S$n"
+      assert(parseAll(scanCode, input).get match {
+        case Right(o) => o.value == n
+        case Left(e)  => e.isInstanceOf[NoSuchElementException] && sysUnusableKeys.contains(n)
+      })
     }
   }
 
