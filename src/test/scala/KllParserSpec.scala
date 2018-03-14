@@ -201,4 +201,15 @@ class KllParserSpec extends UnitSpec {
       assert(parseAll(trigger, i).get == o)
     }
   }
+
+  it should "produce NoSuchElementException when given usbCode doesn't exist in table" in {
+    val usbCodeRange = Gen.choose(usbCode2Name.head._1, usbCode2Name.last._1)
+    forAll(usbCodeRange) { n: Int =>
+      val input = s"U$n"
+      assert(parseAll(usbCode, input).get match {
+        case Right(o) => o.value == n
+        case Left(e)  => e.isInstanceOf[NoSuchElementException] && usbUnusableKeys.contains(n)
+      })
+    }
+  }
 }
