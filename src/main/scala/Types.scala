@@ -12,15 +12,17 @@ case class Variable(key: String, value: String)     extends Formula
 sealed trait Trigger extends Elem
 sealed trait Result  extends Elem
 
-case class ScanCode(value: Int, analog: Int = Analog.MAX) extends Trigger
-case class USBCode(value: Int, analog: Int = Analog.MAX)  extends Trigger with Result
-case class KllRange()                                     extends Trigger
-case class Combination()                                  extends Trigger with Result
-case class KllNone()                                      extends Result
-case class CCC()                                          extends Result
-case class SCC()                                          extends Result
-case class KllSeq()                                       extends Result
-case class Capability()                                   extends Result
+case class Key(value: Int, analog: Option[Int] = None)
+
+case class ScanCode(value: List[Key], analog: Int = Analog.MAX) extends Trigger
+case class USBCode(value: List[Key], analog: Int = Analog.MAX)  extends Trigger with Result
+case class KllRange()                                           extends Trigger
+case class Combination()                                        extends Trigger with Result
+case class KllNone()                                            extends Result
+case class CCC()                                                extends Result
+case class SCC()                                                extends Result
+case class KllSeq()                                             extends Result
+case class Capability()                                         extends Result
 
 sealed trait KllError extends Ignorable {
   val msg: String

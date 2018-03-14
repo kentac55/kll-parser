@@ -39,12 +39,12 @@ object KllParser extends RegexParsers with JavaTokenParsers {
 
   def scanCode: Parser[Either[Throwable, ScanCode]] =
     "S" ~> (hex | dec) ~ opt(analog) ^^ {
-      case s ~ a => s.map(ScanCode(_, a.getOrElse(Analog.MAX)))
+      case s ~ a => s.map(v => ScanCode(Key(v, None) :: Nil, a.getOrElse(Analog.MAX)))
     }
 
   def usbCode: Parser[Either[Throwable, USBCode]] =
     "U" ~> (hex | dec | word) ~ opt(analog) ^^ {
-      case u ~ a => u.map(USBCode(_, a.getOrElse(Analog.MAX)))
+      case u ~ a => u.map(v => USBCode(Key(v, None) :: Nil, a.getOrElse(Analog.MAX)))
     }
 
   def analog: Parser[Int] =

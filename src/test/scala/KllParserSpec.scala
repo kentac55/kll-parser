@@ -61,8 +61,8 @@ class KllParserSpec extends UnitSpec {
   "scanCode()" should "parse given string to ScanCode object" in {
     val goodScanCode = Table(
       ("i", "o"),
-      ("S0x2A", ScanCode(0x2A)),
-      ("S42", ScanCode(42))
+      ("S0x2A", ScanCode(Key(0x2A) :: Nil)),
+      ("S42", ScanCode(Key(42) :: Nil))
     )
     forAll(goodScanCode) { (i: String, o: ScanCode) =>
       assert(parseAll(scanCode, i).get == Right(o))
@@ -86,7 +86,7 @@ class KllParserSpec extends UnitSpec {
     val analogRange = Gen.choose(0, 100)
     forAll(analogRange) { n: Int =>
       val input = s"S42($n)"
-      assert(parseAll(scanCode, input).get == Right(ScanCode(42, n)))
+      assert(parseAll(scanCode, input).get == Right(ScanCode(Key(42) :: Nil, n)))
     }
   }
 
@@ -107,7 +107,7 @@ class KllParserSpec extends UnitSpec {
     forAll(sysCodeRange) { n: Int =>
       val input = s"S$n"
       assert(parseAll(scanCode, input).get match {
-        case Right(o) => o.value == n
+        case Right(o) => o.value.head.value == n
         case Left(e)  => e.isInstanceOf[NoSuchElementException] && sysUnusableKeys.contains(n)
       })
     }
@@ -116,13 +116,13 @@ class KllParserSpec extends UnitSpec {
   "usbCode()" should "parse given string to UsbCode Object" in {
     val goodUsbCode = Table(
       ("i", "o"),
-      ("U0x2A", USBCode(0x2A)),
-      ("U42", USBCode(42)),
-      ("U\"A\"", USBCode(4)),
-      ("U\"a\"", USBCode(4)),
-      ("U\"Backspace\"", USBCode(42)),
-      ("U\"backspace\"", USBCode(42)),
-      ("U\"-\"", USBCode(0x2D))
+      ("U0x2A", USBCode(Key(0x2A) :: Nil)),
+      ("U42", USBCode(Key(42) :: Nil)),
+      ("U\"A\"", USBCode(Key(4) :: Nil)),
+      ("U\"a\"", USBCode(Key(4) :: Nil)),
+      ("U\"Backspace\"", USBCode(Key(42) :: Nil)),
+      ("U\"backspace\"", USBCode(Key(42) :: Nil)),
+      ("U\"-\"", USBCode(Key(0x2D) :: Nil))
     )
     forAll(goodUsbCode) { (i: String, o: USBCode) =>
       assert(parseAll(usbCode, i).get == Right(o))
@@ -158,7 +158,7 @@ class KllParserSpec extends UnitSpec {
     val analogRange = Gen.choose(0, 100)
     forAll(analogRange) { n: Int =>
       val input = s"U42($n)"
-      assert(parseAll(usbCode, input).get == Right(USBCode(42, n)))
+      assert(parseAll(usbCode, input).get == Right(USBCode(Key(42) :: Nil, n)))
     }
   }
 
@@ -177,15 +177,15 @@ class KllParserSpec extends UnitSpec {
   "trigger()" should "parse given string to scanCode or usbCode" in {
     val goodString = Table(
       ("i", "o"),
-      ("S0x2A", ScanCode(0x2A)),
-      ("S42", ScanCode(42)),
-      ("U0x2A", USBCode(0x2A)),
-      ("U42", USBCode(42)),
-      ("U\"A\"", USBCode(4)),
-      ("U\"a\"", USBCode(4)),
-      ("U\"Backspace\"", USBCode(42)),
-      ("U\"backspace\"", USBCode(42)),
-      ("U\"-\"", USBCode(0x2D))
+      ("S0x2A", ScanCode(Key(0x2A) :: Nil)),
+      ("S42", ScanCode(Key(42) :: Nil)),
+      ("U0x2A", USBCode(Key(0x2A) :: Nil)),
+      ("U42", USBCode(Key(42) :: Nil)),
+      ("U\"A\"", USBCode(Key(4) :: Nil)),
+      ("U\"a\"", USBCode(Key(4) :: Nil)),
+      ("U\"Backspace\"", USBCode(Key(42) :: Nil)),
+      ("U\"backspace\"", USBCode(Key(42) :: Nil)),
+      ("U\"-\"", USBCode(Key(0x2D) :: Nil))
     )
     forAll(goodString) { (i: String, o: Trigger) =>
       assert(parseAll(trigger, i).get == o)
@@ -207,7 +207,7 @@ class KllParserSpec extends UnitSpec {
     forAll(usbCodeRange) { n: Int =>
       val input = s"U$n"
       assert(parseAll(usbCode, input).get match {
-        case Right(o) => o.value == n
+        case Right(o) => o.value.head.value == n
         case Left(e)  => e.isInstanceOf[NoSuchElementException] && usbUnusableKeys.contains(n)
       })
     }
