@@ -24,7 +24,7 @@ class KllParserSpec extends UnitSpec {
       "asdf#",
       "a#df"
     )
-    forAll(badComments) { (i: String) =>
+    forAll(badComments) { i: String =>
       assertThrows[RuntimeException](parseAll(comment, i).get)
     }
   }
@@ -53,7 +53,7 @@ class KllParserSpec extends UnitSpec {
       "\"key=value",
       "key=value\""
     )
-    forAll(badFormulas) { (i: String) =>
+    forAll(badFormulas) { i: String =>
       assertThrows[RuntimeException](parseAll(variables, i).get)
     }
   }
@@ -77,7 +77,7 @@ class KllParserSpec extends UnitSpec {
       "S-0x2A",
       "S-10"
     )
-    forAll(badScanCode) { (i: String) =>
+    forAll(badScanCode) { i: String =>
       assertThrows[RuntimeException](parseAll(scanCode, i).get)
     }
   }
@@ -97,7 +97,7 @@ class KllParserSpec extends UnitSpec {
       "S0x2A(1000)",
       "S42(000)"
     )
-    forAll(badScanCodeWithAnalog) { (i: String) =>
+    forAll(badScanCodeWithAnalog) { i: String =>
       assertThrows[RuntimeException](parseAll(scanCode, i).get)
     }
   }
@@ -136,7 +136,7 @@ class KllParserSpec extends UnitSpec {
       "Uasdf",
       "U-10"
     )
-    forAll(badUsbCode) { (i: String) =>
+    forAll(badUsbCode) { i: String =>
       assertThrows[RuntimeException](parseAll(usbCode, i).get)
     }
   }
@@ -146,7 +146,7 @@ class KllParserSpec extends UnitSpec {
       "i",
       "U\"asdf\""
     )
-    forAll(nonExistUsbCode) { (i: String) =>
+    forAll(nonExistUsbCode) { i: String =>
       assert(parseAll(usbCode, i).get match {
         case Left(e) => e.isInstanceOf[NoSuchElementException]
         case _       => false
@@ -169,7 +169,7 @@ class KllParserSpec extends UnitSpec {
       "U0x2A(1000)",
       "U42(000)"
     )
-    forAll(badScanCodeWithAnalog) { (i: String) =>
+    forAll(badScanCodeWithAnalog) { i: String =>
       assertThrows[RuntimeException](parseAll(scanCode, i).get)
     }
   }

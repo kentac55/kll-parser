@@ -48,7 +48,7 @@ object KllParser extends RegexParsers with JavaTokenParsers {
     }
 
   def analog: Parser[Int] =
-    "(" ~> analogRegex <~ ")" ^^ { Integer.parseInt(_) }
+    "(" ~> analogRegex <~ ")" ^^ { Integer.parseInt }
 
   private def hex: Parser[Either[Throwable, Int]] =
     hexRegex ^^ (x => allCatch.either(Integer.parseInt(x.drop(2), 16)))
