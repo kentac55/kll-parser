@@ -212,4 +212,38 @@ class KllParserSpec extends UnitSpec {
       })
     }
   }
+
+  "hexRange()" should "parse hex range" in {
+    val goodString = Table(
+      ("i", "o"),
+      ("0x2A-0x2B", Range(42, 44)),
+      ("0x2A-0x2A", Seq(42)),
+      ("0x2B-0x2A", Range(42, 44))
+    )
+    forAll(goodString) { (i: String, o: Seq[Int]) =>
+      assert(parseAll(hexRange, i).get == Right(o))
+    }
+  }
+  "decRange()" should "parse dec range" in {
+    val goodString = Table(
+      ("i", "o"),
+      ("42-43", Range(42, 44)),
+      ("42-42", Seq(42)),
+      ("43-42", Range(42, 44))
+    )
+    forAll(goodString) { (i: String, o: Seq[Int]) =>
+      assert(parseAll(decRange, i).get == Right(o))
+    }
+  }
+  "wordRange()" should "parse word range" in {
+    val goodString = Table(
+      ("i", "o"),
+      ("\"0\"-\"9\"", Range(0x26, 0x28)),
+      ("\"9\"-\"9\"", Seq(0x26)),
+      ("\"9\"-\"0\"", Range(0x26, 0x28))
+    )
+    forAll(goodString) { (i: String, o: Seq[Int]) =>
+      assert(parseAll(wordRange, i).get == Right(o))
+    }
+  }
 }

@@ -24,6 +24,10 @@ object KllParser extends RegexParsers with JavaTokenParsers {
         Variable("\"(.*)\"".r.replaceAllIn(key, "$1"), "\"(.*)\"".r.replaceAllIn(value, "$1"))
     }
 
+  def range: Parser[KllRange] = ???
+
+  def usbCodeRange: Parser[KllRange] = ???
+
   def defines: Parser[Any] = ???
 
   def capability: Parser[Capability] = ???
@@ -36,6 +40,8 @@ object KllParser extends RegexParsers with JavaTokenParsers {
     case Right(c) => c
     case Left(e)  => TriggerError(e.getMessage)
   }
+
+  def result: Parser[Result] = ???
 
   def scanCode: Parser[Either[Throwable, ScanCode]] =
     "S" ~> (hex | dec) ~ opt(analog) ^^ {
@@ -57,6 +63,43 @@ object KllParser extends RegexParsers with JavaTokenParsers {
   private def word: Parser[Either[Throwable, Int]] =
     stringLiteral ^^ (x => allCatch.either(name2UsbCode(x.drop(1).dropRight(1))))
 
-  def result: Parser[Result] = ???
-
+  def hexRange: Parser[Either[Throwable, Seq[Int]]] = (hex ~ "-" ~ hex) ^^ { result =>
+    {
+      result._1._1.flatMap(a => {
+        result._2.map(b => {
+          (a, b) match {
+            case (x, y) if x < y  => Range(x, y + 1)
+            case (x, y) if x == y => x :: Nil
+            case (x, y) if x > y  => Range(y, x + 1)
+          }
+        })
+      })
+    }
+  }
+  def decRange: Parser[Either[Throwable, Seq[Int]]] = (dec ~ "-" ~ dec) ^^ { result =>
+    {
+      result._1._1.flatMap(a => {
+        result._2.map(b => {
+          (a, b) match {
+            case (x, y) if x < y  => Range(x, y + 1)
+            case (x, y) if x == y => x :: Nil
+            case (x, y) if x > y  => Range(y, x + 1)
+          }
+        })
+      })
+    }
+  }
+  def wordRange: Parser[Either[Throwable, Seq[Int]]] = (word ~ "-" ~ word) ^^ { result =>
+    {
+      result._1._1.flatMap(a => {
+        result._2.map(b => {
+          (a, b) match {
+            case (x, y) if x < y  => Range(x, y + 1)
+            case (x, y) if x == y => x :: Nil
+            case (x, y) if x > y  => Range(y, x + 1)
+          }
+        })
+      })
+    }
+  }
 }
